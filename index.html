@@ -244,18 +244,18 @@
     </div>
 
     <script>
-        // --- Form State & Pricing (FOR TESTING) ---
+        // --- Form State & Pricing (PRODUCTION VALUES) ---
         let currentPageId = 'page1';
-        const REGISTRATION_FEE = 1; // 1 Rupee registration fee
-        const coursePrices = { // All courses are 1 Rupee for full payment
-            'Blended': 1,
-            'Mentorship': 1,
-            'Self-Paced': 1
+        const REGISTRATION_FEE = 1025;
+        const coursePrices = {
+            'Blended': 7500,
+            'Mentorship': 10000,
+            'Self-Paced': 5599
         };
-        const mmCouponPrices = { // Coupons also result in 1 Rupee payment
-            'Blended': 1,
-            'Mentorship': 1,
-            'Self-Paced': 1
+        const mmCouponPrices = {
+            'Blended': 6100,
+            'Mentorship': 7300,
+            'Self-Paced': 5000
         };
 
         // --- DOM Elements ---
@@ -386,7 +386,7 @@
             let amountToPayNow;
             if (paymentType === 'installment') {
                 amountToPayNow = REGISTRATION_FEE;
-                const remaining = 4; // Total remaining for installments is 4 Rupees
+                const remaining = discountedAmount - amountToPayNow;
                 summaryText += `You are paying the registration fee now. The remaining balance of ₹${remaining.toFixed(2)} will be collected in 2 separate installments.`;
             } else {
                 amountToPayNow = discountedAmount;
@@ -395,10 +395,7 @@
             discountMessage.innerHTML = summaryText;
             amountToPaySpan.textContent = `₹${amountToPayNow.toFixed(2)}`;
             
-            // The total amount for the installment plan is Registration Fee (1) + Total Installments (4) = 5
-            const totalCourseAmount = paymentType === 'installment' ? (REGISTRATION_FEE + 4) : discountedAmount;
-
-            return { amountToPayNow, totalCourseAmount };
+            return { amountToPayNow, totalCourseAmount: discountedAmount };
         }
 
         couponInput.addEventListener('input', calculateFinalAmount);
@@ -420,9 +417,12 @@
             }
             
             const { amountToPayNow, totalCourseAmount } = calculateFinalAmount();
+            
+            // IMPORTANT: Replace this with your actual Glitch project URL
+            const backendUrl = 'https://your-project-name.glitch.me';
 
             try {
-                const orderResponse = await fetch('/api/create-order', {
+                const orderResponse = await fetch(`${backendUrl}/create-order`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ amount: amountToPayNow * 100, currency: 'INR' }),
@@ -440,7 +440,7 @@
                     "image": "https://placehold.co/150x150/007bff/ffffff?text=YC",
                     "order_id": order.id,
                     "handler": async function(response) {
-                        const verifyResponse = await fetch('/api/verify-payment', {
+                        const verifyResponse = await fetch(`${backendUrl}/verify-payment`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ ...response, studentData, totalAmount: totalCourseAmount }),
