@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Page Student Payment Form</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-page { display: none; animation: fadeIn 0.5s; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .active-page { display: block; }
+        .progress-bar-fill { transition: width 0.4s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8 m-4">
+        <h1 id="formTitle" class="text-2xl font-bold text-center text-gray-800 mb-2">Registration</h1>
+        <p class="text-center text-gray-500 mb-6">Please fill out the form to proceed.</p>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
+            <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full progress-bar-fill" style="width: 25%;"></div>
+        </div>
+
+        <!-- Form Container -->
+        <form id="studentForm">
+            <!-- Page 1: Basic Information -->
+            <div id="page1" class="form-page active-page">
+                <h2 class="text-xl font-semibold mb-6 text-gray-700">Step 1: Basic Information</h2>
+                <div class="grid md:grid-cols-1 gap-6">
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="name" id="name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="name" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Full Name</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="email" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email Address</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="tel" name="phone" id="phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="phone" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone Number</label>
+                    </div>
+                    <div>
+                        <label for="user_type" class="text-sm text-gray-500">I am a...</label>
+                        <select id="user_type" name="user_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="">Select an option</option>
+                            <option value="student">Student</option>
+                            <option value="self-employed">Self-Employed</option>
+                            <option value="working-professional">Working Professional</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-8">
+                    <button type="button" onclick="handleNextFromPage1()" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Next</button>
+                </div>
+            </div>
+
+            <!-- Page 2a: Student Details -->
+            <div id="page2a" class="form-page">
+                <h2 class="text-xl font-semibold mb-6 text-gray-700">Step 2: Student Details</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="relative z-0 w-full mb-5 group md:col-span-2">
+                        <input type="email" name="college_email" id="college_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="college_email" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">College Email Address</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group md:col-span-2">
+                        <input type="text" name="college_name" id="college_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="college_name" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">College Name</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="department" id="department" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="department" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Department</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="branch" id="branch" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="branch" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Branch</label>
+                    </div>
+                    <div>
+                        <label for="state_student" class="text-sm text-gray-500">State</label>
+                        <select id="state_student" name="state" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="">Select State</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="city_student" class="text-sm text-gray-500">City</label>
+                        <select id="city_student" name="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button type="button" onclick="showPage('page1')" class="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Previous</button>
+                    <button type="button" onclick="showPage('page3')" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Next</button>
+                </div>
+            </div>
+
+            <!-- Page 2b: Professional Details -->
+            <div id="page2b" class="form-page">
+                <h2 class="text-xl font-semibold mb-6 text-gray-700">Step 2: Professional Details</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                     <div>
+                        <label for="experience" class="text-sm text-gray-500">How much experience do you have?</label>
+                        <select id="experience" name="experience" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="0">0 years</option>
+                            <option value="1-2">1-2 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5+">5+ years</option>
+                        </select>
+                    </div>
+                    <div></div> <!-- Spacer -->
+                     <div>
+                        <label for="state_prof" class="text-sm text-gray-500">State</label>
+                        <select id="state_prof" name="state" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="">Select State</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="city_prof" class="text-sm text-gray-500">City</label>
+                        <select id="city_prof" name="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button type="button" onclick="showPage('page1')" class="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Previous</button>
+                    <button type="button" onclick="showPage('page3')" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Next</button>
+                </div>
+            </div>
+            
+            <!-- Page 3: Course Selection -->
+            <div id="page3" class="form-page">
+                <h2 class="text-xl font-semibold mb-6 text-gray-700">Step 3: Course Selection</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label for="course_name" class="text-sm text-gray-500">Course</label>
+                        <select id="course_name" name="course_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                           <optgroup label="TECHNICAL/CSE DOMAINS">
+                                <option>Data Science</option>
+                                <option>Artificial Intelligence</option>
+                                <option>Machine Learning</option>
+                                <option>Web Development</option>
+                                <option>App Development</option>
+                                <option>Cloud Computing</option>
+                                <option>Cyber Security</option>
+                           </optgroup>
+                           <optgroup label="ECE/EEE">
+                                <option>Drone Engineering</option>
+                                <option>Embedded Systems</option>
+                                <option>VLSI</option>
+                                <option>IoT and Robotics with Hardware Kit</option>
+                                <option>Hybrid and Electric Vehicles</option>
+                           </optgroup>
+                           <optgroup label="BIO-TECH DOMAINS">
+                                <option>Bio Informatics</option>
+                                <option>Genetic Engineering</option>
+                                <option>Micro Biology</option>
+                                <option>Molecular Biology</option>
+                                <option>Nano Technology</option>
+                           </optgroup>
+                           <optgroup label="MANAGEMENT DOMAINS">
+                                <option>Digital Marketing</option>
+                                <option>Finance</option>
+                                <option>Human Resource Management</option>
+                                <option>Stock Marketing</option>
+                                <option>Marketing Management</option>
+                                <option>Investment Banking</option>
+                                <option>Social Media Marketing</option>
+                           </optgroup>
+                           <optgroup label="MECH/CIVIL">
+                                <option>AutoCAD</option>
+                                <option>Car Designing</option>
+                                <option>Construction Planning and Structural Analysis</option>
+                           </optgroup>
+                           <optgroup label="PRO DOMAINS">
+                                <option>Graphic Designing</option>
+                                <option>AR/VR</option>
+                                <option>UI/UX</option>
+                                <option>Metaverse</option>
+                                <option>Bitcoin/Blockchain</option>
+                                <option>Data Analytics</option>
+                                <option>Web 3</option>
+                           </optgroup>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="course_type" class="text-sm text-gray-500">Type of Course</label>
+                        <select id="course_type" name="course_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="Blended">Blended</option>
+                            <option value="Mentorship">Mentorship</option>
+                            <option value="Self-Paced">Self-Paced</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="course_month" class="text-sm text-gray-500">Starting Month</label>
+                        <select id="course_month" name="course_month" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                     <button type="button" onclick="handleBackFromPage3()" class="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Previous</button>
+                    <button type="button" onclick="showPage('page4')" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Next</button>
+                </div>
+            </div>
+
+            <!-- Page 4: Payment -->
+            <div id="page4" class="form-page">
+                 <h2 class="text-xl font-semibold mb-6 text-gray-700">Step 4: Finalize Payment</h2>
+                 <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="payment_type" class="text-sm text-gray-500">Payment Option</label>
+                        <select id="payment_type" name="payment_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-blue-500 focus:ring-blue-500" required>
+                            <option value="full">Full Payment</option>
+                            <option value="installment">Registration Fee + 2 Installments</option>
+                        </select>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="coupon" id="coupon" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                        <label for="coupon" class="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Discount Coupon (Optional)</label>
+                    </div>
+                 </div>
+                 <div id="payment-summary" class="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <h3 class="font-semibold text-gray-800">Payment Summary</h3>
+                    <div id="discount-message" class="text-sm text-green-600 mt-1 leading-relaxed"></div>
+                    <div class="text-lg font-bold text-blue-600 mt-2">Amount to Pay Now: <span id="amount-to-pay"></span></div>
+                 </div>
+                <div class="flex justify-between mt-8">
+                    <button type="button" onclick="showPage('page3')" class="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Previous</button>
+                    <button type="button" id="paymentButton" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-8 py-2.5 text-center">Continue to Payment</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // --- Form State & Pricing (PRODUCTION VALUES) ---
+        let currentPageId = 'page1';
+        const REGISTRATION_FEE = 1025;
+        const coursePrices = {
+            'Blended': 7500,
+            'Mentorship': 10000,
+            'Self-Paced': 5599
+        };
+        const mmCouponPrices = {
+            'Blended': 6100,
+            'Mentorship': 7300,
+            'Self-Paced': 5000
+        };
+
+        // --- DOM Elements ---
+        const progressBar = document.getElementById('progressBar');
+        const paymentButton = document.getElementById('paymentButton');
+        const form = document.getElementById('studentForm');
+        const userTypeSelect = document.getElementById('user_type');
+        const couponInput = document.getElementById('coupon');
+        const discountMessage = document.getElementById('discount-message');
+        const courseTypeSelect = document.getElementById('course_type');
+        const courseMonthSelect = document.getElementById('course_month');
+        const paymentTypeSelect = document.getElementById('payment_type');
+        const amountToPaySpan = document.getElementById('amount-to-pay');
+
+        // --- Location Data ---
+        const locationData = {
+            "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur"], "Arunachal Pradesh": ["Itanagar", "Naharlagun"], "Assam": ["Guwahati", "Dibrugarh", "Silchar"], "Bihar": ["Patna", "Gaya", "Bhagalpur"], "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur"], "Goa": ["Panaji", "Margao"], "Gujarat": ["Ahmedabad", "Surat", "Vadodara"], "Haryana": ["Faridabad", "Gurugram", "Panipat"], "Himachal Pradesh": ["Shimla", "Manali"], "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad"], "Karnataka": ["Bengaluru", "Mysuru", "Hubballi"], "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode"], "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur"], "Maharashtra": ["Mumbai", "Pune", "Nagpur"], "Manipur": ["Imphal"], "Meghalaya": ["Shillong"], "Mizoram": ["Aizawl"], "Nagaland": ["Kohima", "Dimapur"], "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela"], "Punjab": ["Ludhiana", "Amritsar", "Jalandhar"], "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur"], "Sikkim": ["Gangtok"], "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"], "Telangana": ["Hyderabad", "Warangal", "Nizamabad"], "Tripura": ["Agartala"], "Uttar Pradesh": ["Lucknow", "Kanpur", "Ghaziabad"], "Uttarakhand": ["Dehradun", "Haridwar"], "West Bengal": ["Kolkata", "Asansol", "Siliguri"],
+        };
+
+        // --- Page Navigation ---
+        function showPage(pageId) {
+            if (pageId !== 'page1' && !validatePage(currentPageId)) { return; }
+            document.querySelectorAll('.form-page').forEach(page => page.classList.remove('active-page'));
+            document.getElementById(pageId).classList.add('active-page');
+            currentPageId = pageId;
+            if (pageId === 'page4') { calculateFinalAmount(); }
+            updateProgressBar();
+        }
+
+        function handleNextFromPage1() {
+            if (!validatePage('page1')) return;
+            const userType = userTypeSelect.value;
+            if (userType === 'student') { showPage('page2a'); } 
+            else if (userType === 'self-employed' || userType === 'working-professional') { showPage('page2b'); } 
+            else { alert('Please select your role.'); }
+        }
+
+        function handleBackFromPage3() {
+            const userType = userTypeSelect.value;
+            if (userType === 'student') { showPage('page2a'); } 
+            else { showPage('page2b'); }
+        }
+
+        function updateProgressBar() {
+            let step = 1;
+            if (currentPageId === 'page2a' || currentPageId === 'page2b') step = 2;
+            if (currentPageId === 'page3') step = 3;
+            if (currentPageId === 'page4') step = 4;
+            progressBar.style.width = `${(step / 4) * 100}%`;
+        }
+
+        // --- Validation ---
+        function validatePage(pageId) {
+            const page = document.getElementById(pageId);
+            const inputs = page.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+            inputs.forEach(input => {
+                input.classList.remove('border-red-500');
+                input.classList.add('border-gray-300');
+                if (!input.value) {
+                    isValid = false;
+                    input.classList.add('border-red-500');
+                }
+            });
+            if (!isValid) { alert('Please fill out all required fields.'); }
+            return isValid;
+        }
+
+        // --- Location Dropdown Population ---
+        function populateStates(stateSelectElement) {
+            for (const state in locationData) {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelectElement.appendChild(option);
+            }
+        }
+
+        function populateCities(state, citySelectElement) {
+            citySelectElement.innerHTML = '<option value="">Select City</option>';
+            if (state && locationData[state]) {
+                locationData[state].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelectElement.appendChild(option);
+                });
+            }
+        }
+        
+        document.getElementById('state_student').addEventListener('change', (e) => populateCities(e.target.value, document.getElementById('city_student')));
+        document.getElementById('state_prof').addEventListener('change', (e) => populateCities(e.target.value, document.getElementById('city_prof')));
+
+        // --- Dynamic Month Population ---
+        function populateCourseMonths() {
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const now = new Date();
+            const currentDay = now.getDate();
+            let startMonthIndex = (currentDay >= 5) ? now.getMonth() + 1 : now.getMonth();
+            courseMonthSelect.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const monthIndex = (startMonthIndex + i) % 12;
+                const year = now.getFullYear() + Math.floor((startMonthIndex + i) / 12);
+                const option = document.createElement('option');
+                option.value = `${months[monthIndex]} ${year}`;
+                option.textContent = `${months[monthIndex]} ${year}`;
+                courseMonthSelect.appendChild(option);
+            }
+        }
+
+        // --- Payment Calculation ---
+        function calculateFinalAmount() {
+            const selectedCourseType = courseTypeSelect.value;
+            const baseAmount = coursePrices[selectedCourseType];
+            const couponCode = couponInput.value.trim().toUpperCase();
+            let discountedAmount = baseAmount;
+            let summaryText = '';
+
+            if (couponCode === 'MM') {
+                discountedAmount = mmCouponPrices[selectedCourseType];
+                summaryText = `Success! Coupon "MM" applied.<br>`;
+            } else if (couponCode === 'DISCOUNT10') {
+                discountedAmount = baseAmount * 0.90;
+                summaryText = `Success! 10% discount applied.<br>`;
+            }
+
+            const paymentType = paymentTypeSelect.value;
+            let amountToPayNow;
+            if (paymentType === 'installment') {
+                amountToPayNow = REGISTRATION_FEE;
+                const remaining = discountedAmount - amountToPayNow;
+                summaryText += `You are paying the registration fee now. The remaining balance of ₹${remaining.toFixed(2)} will be collected in 2 separate installments.`;
+            } else {
+                amountToPayNow = discountedAmount;
+            }
+            
+            discountMessage.innerHTML = summaryText;
+            amountToPaySpan.textContent = `₹${amountToPayNow.toFixed(2)}`;
+            
+            return { amountToPayNow, totalCourseAmount: discountedAmount };
+        }
+
+        couponInput.addEventListener('input', calculateFinalAmount);
+        paymentTypeSelect.addEventListener('change', calculateFinalAmount);
+        courseTypeSelect.addEventListener('change', calculateFinalAmount);
+
+        // --- Razorpay Payment Integration with Backend ---
+        paymentButton.addEventListener('click', async () => {
+            if (!validatePage(currentPageId)) return;
+
+            const formData = new FormData(form);
+            const studentData = Object.fromEntries(formData.entries());
+            if (studentData.user_type === 'student') {
+                studentData.state = document.getElementById('state_student').value;
+                studentData.city = document.getElementById('city_student').value;
+            } else {
+                studentData.state = document.getElementById('state_prof').value;
+                studentData.city = document.getElementById('city_prof').value;
+            }
+            
+            const { amountToPayNow, totalCourseAmount } = calculateFinalAmount();
+
+            try {
+                const orderResponse = await fetch('/api/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: amountToPayNow * 100, currency: 'INR' }),
+                });
+
+                const order = await orderResponse.json();
+                if (order.error) { throw new Error(order.error); }
+
+                const options = {
+                    "key": "rzp_live_Ea7BqQYsVO8vbL",
+                    "amount": order.amount,
+                    "currency": "INR",
+                    "name": "Your Company Name",
+                    "description": `Payment for ${studentData.course_name}`,
+                    "image": "https://placehold.co/150x150/007bff/ffffff?text=YC",
+                    "order_id": order.id,
+                    "handler": async function(response) {
+                        const verifyResponse = await fetch('/api/verify-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ ...response, studentData, totalAmount: totalCourseAmount }),
+                        });
+
+                        const verifyResult = await verifyResponse.json();
+                        if (verifyResult.status === 'success') {
+                            alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                            document.body.innerHTML = `<div class="text-center p-10"><h1 class="text-3xl font-bold text-green-600">Payment Successful!</h1><p class="mt-4 text-lg">Thank you for your registration.</p><p class="mt-2 text-gray-600">Your Payment ID is: ${response.razorpay_payment_id}</p></div>`;
+                        } else {
+                            throw new Error('Payment verification failed.');
+                        }
+                    },
+                    "prefill": { "name": studentData.name, "email": studentData.email, "contact": studentData.phone },
+                    "notes": studentData,
+                    "theme": { "color": "#3399cc" }
+                };
+
+                const rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function(response) {
+                    alert("Payment Failed! Error: " + response.error.description);
+                    console.error("Payment Failed Response:", response);
+                });
+                rzp1.open();
+
+            } catch (error) {
+                console.error("An error occurred:", error);
+                alert('Could not initiate payment. Please try again.');
+            }
+        });
+
+        // --- Initial Setup ---
+        window.onload = () => {
+            populateStates(document.getElementById('state_student'));
+            populateStates(document.getElementById('state_prof'));
+            populateCourseMonths();
+            showPage('page1');
+        };
+    </script>
+
+</body>
+</html>
