@@ -452,13 +452,21 @@
                         }
                     },
                     "prefill": { "name": studentData.name, "email": studentData.email, "contact": studentData.phone },
-                    "notes": studentData,
+                    "notes": {
+                        "user_type": studentData.user_type,
+                        "course_name": studentData.course_name,
+                        "course_type": studentData.course_type,
+                        "course_month": studentData.course_month,
+                        "payment_type": studentData.payment_type,
+                        "coupon_used": studentData.coupon,
+                        "location": `${studentData.city}, ${studentData.state}`
+                    },
                     "theme": { "color": "#3399cc" }
                 };
 
                 const rzp1 = new Razorpay(options);
                 rzp1.on('payment.failed', function(response) {
-                    alert("Payment Failed! Error: " + response.error.description);
+                    alert("Payment Failed! Error: + response.error.description");
                     console.error("Payment Failed Response:", response);
                 });
                 rzp1.open();
