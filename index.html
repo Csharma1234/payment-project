@@ -418,11 +418,19 @@
             
             const { amountToPayNow, totalCourseAmount } = calculateFinalAmount();
             
+<<<<<<< HEAD
             // This is a relative path that works with Vercel's serverless functions
             const backendUrl = ''; 
 
             try {
                 const orderResponse = await fetch(`${backendUrl}/api/create-order`, {
+=======
+            // IMPORTANT: Replace this with your actual Glitch project URL
+            const backendUrl = 'https://your-project-name.glitch.me';
+
+            try {
+                const orderResponse = await fetch(`${backendUrl}/create-order`, {
+>>>>>>> 163b5cabf44640dde62af63b3cb9452b6db85827
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ amount: amountToPayNow * 100, currency: 'INR' }),
@@ -440,7 +448,11 @@
                     "image": "https://placehold.co/150x150/007bff/ffffff?text=YC",
                     "order_id": order.id,
                     "handler": async function(response) {
+<<<<<<< HEAD
                         const verifyResponse = await fetch(`${backendUrl}/api/verify-payment`, {
+=======
+                        const verifyResponse = await fetch(`${backendUrl}/verify-payment`, {
+>>>>>>> 163b5cabf44640dde62af63b3cb9452b6db85827
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ ...response, studentData, totalAmount: totalCourseAmount }),
