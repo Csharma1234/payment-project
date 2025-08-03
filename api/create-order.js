@@ -1,7 +1,6 @@
-// /api/create-order.js
 const Razorpay = require("razorpay");
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).send({ message: 'Only POST requests allowed' });
   }
@@ -14,7 +13,7 @@ export default async function handler(req, res) {
   });
 
   const options = {
-    amount: amount, // amount in the smallest currency unit
+    amount: amount,
     currency: currency,
     receipt: `receipt_order_${new Date().getTime()}`,
   };
@@ -23,7 +22,7 @@ export default async function handler(req, res) {
     const order = await razorpay.orders.create(options);
     res.status(200).json(order);
   } catch (error) {
-    console.error(error);
+    console.error("Error creating order:", error);
     res.status(500).json({ error: "Error creating order" });
   }
-}
+};
